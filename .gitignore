@@ -1,8 +1,8 @@
 .DS_Store
-./extension/.vscode/*
+extension/.vscode/*
 
-./extension/node_modules
-./extension/dist
+extension/node_modules
+extension/dist
 
-./backend/dist
-./backend/.env
+backend/dist
+backend/.env

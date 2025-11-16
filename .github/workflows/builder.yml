@@ -1,0 +1,81 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows]
+        goarch: [amd64, arm64]
+    name: Build Go backend (${{ matrix.goos }}-${{ matrix.goarch }})
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build binary
+        run: |
+          mkdir -p dist
+          GOARCH=${{ matrix.goarch }} GOOS=${{ matrix.goos }} go build -o dist/backend-${{ matrix.goos }}-${{ matrix.goarch }} ./backend/cmd/server
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/backend-${{ matrix.goos }}-${{ matrix.goarch }}
+
+  build-extension:
+    runs-on: ubuntu-latest
+    name: Build Web Extension
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Extension
+        run: npm run publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: extension.zip
+          path: extension.zip
+
+  release:
+    needs: [build-backend, build-extension]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: List artifacts
+        run: ls -R artifacts
+
+      - name: Prepare release assets
+        run: |
+          mkdir release-assets
+          cp artifacts/backend-*/* release-assets/ || true
+          cp artifacts/extension-*/* release-assets/ || true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

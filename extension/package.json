@@ -1,0 +1,25 @@
+{
+  "name": "extension",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "publish": "vite build && zip -r extension.zip dist"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "tailwindcss": "^4.1.17",
+    "vue": "^3.3"
+  },
+  "devDependencies": {
+    "@types/webextension-polyfill": "^0.10.0",
+    "@vitejs/plugin-vue": "^4.5.0",
+    "typescript": "~5.6.3",
+    "vite": "^5.0.0",
+    "vite-plugin-web-extension": "^4.0.0",
+    "vue-tsc": "^1.2.0",
+    "webextension-polyfill": "^0.10.0"
+  }
+}
