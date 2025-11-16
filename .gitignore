@@ -1,0 +1,8 @@
+.DS_Store
+./extension/.vscode/*
+
+./extension/node_modules
+./extension/dist
+
+./backend/dist
+./backend/.env
