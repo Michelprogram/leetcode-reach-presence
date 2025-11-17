@@ -70,7 +70,7 @@ High-level flow:
 
 Follow these steps to run the backend and load the extension.
 
-Note: you could use the latest version from the release tab.
+Note: you could use the latest version from the release tab, start backend binary and load extension ui as explained in *2) Extension (Browser)*.
 
 ### 🗺️ Prerequisites
 
@@ -97,11 +97,11 @@ PORT=8085
 
 2) Extension (Browser)
 
-- Build the extension:
-  cd extension
-  pnpm install
-  pnpm build- Load the built extension:
-  - Chrome: open `chrome://extensions`, enable Developer Mode, click “Load unpacked,” select `extension/dist/`.
+Build the extension:
+- cd extension
+- pnpm install
+- pnpm build- Load the built extension:
+- Chrome: open `chrome://extensions`, enable Developer Mode, click “Load unpacked,” select `extension/dist/`.
 
 <p align="right"><a href="#top">⬆️</a></p>
 
