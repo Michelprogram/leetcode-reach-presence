@@ -85,8 +85,7 @@ jobs:
               run: |
                   mkdir release-assets
                   cp artifacts/backend-*/* release-assets/ || true
-                  cp artifacts/extension release-assets/ || true
-
+                  cp artifacts/extension.zip/* release-assets/ || true
             - name: Create Release
               uses: softprops/action-gh-release@v2
               with:
