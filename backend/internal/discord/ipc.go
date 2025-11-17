@@ -165,6 +165,37 @@ func (ipc IPC) Authenticate(accessToken string) error {
 
 }
 
+func (ipc IPC) RefreshToken(refreshToken, clientID, secretID string) (Oauth2Response, error) {
+	data := url.Values{}
+	data.Set("grant_type", "refresh_token")
+	data.Set("refresh_token", refreshToken)
+
+	req, err := http.NewRequest("POST", "https://discord.com/api/v10/oauth2/token", strings.NewReader(data.Encode()))
+	if err != nil {
+		return Oauth2Response{}, err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.SetBasicAuth(clientID, secretID)
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return Oauth2Response{}, err
+	}
+	defer res.Body.Close()
+
+	bodyBytes, err := io.ReadAll(res.Body)
+	if err != nil {
+		return Oauth2Response{}, err
+	}
+
+	var oauth2Response Oauth2Response
+	if err := json.Unmarshal(bodyBytes, &oauth2Response); err != nil {
+		return Oauth2Response{}, err
+	}
+	return oauth2Response, nil
+}
+
 func (ipc IPC) SetActivity(title, url string) error {
 	now := time.Now()
 	activity := SetActivityMessage{
