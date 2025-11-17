@@ -8,6 +8,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var DefaultClientID string // set via -ldflags at build time
+
 type Config struct {
 	Discord struct {
 		ClientID     string
@@ -25,7 +27,7 @@ func Load() (*Config, error) {
 
 	cfg := &Config{}
 
-	cfg.Discord.ClientID = getEnvOrDefault("CLIENTID", "")
+	cfg.Discord.ClientID = getEnvOrDefault("CLIENTID", DefaultClientID)
 	cfg.Discord.ClientSecret = getEnvOrDefault("CLIENTSECRET", "")
 
 	port := getEnvOrDefault("PORT", "8085")
